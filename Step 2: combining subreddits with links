@@ -17,3 +17,4 @@ WHERE t1.subreddit!=t2.subreddit
 GROUP BY t1.subreddit, t2.subreddit
 
 ## In settings specify table, allow large results and flatten results to be able to save data
+## Location:US
