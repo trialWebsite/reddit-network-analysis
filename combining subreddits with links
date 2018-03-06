@@ -1,0 +1,19 @@
+## Creating list of number of users who authored at least 5 posts in pairs of subreddits: 
+
+#legacySQL
+SELECT t1.subreddit, t2.subreddit, SUM(1) as NumOverlaps
+FROM (SELECT subreddit, author, COUNT(1) as cnt 
+     FROM (TABLE_QUERY([fh-bigquery:reddit_comments],
+         'table_id CONTAINS "2017_" AND length(table_id) >= 5'))
+     GROUP BY subreddit, author HAVING cnt > 10) t1
+     
+JOIN (SELECT subreddit, author, COUNT(1) as cnt 
+     FROM(TABLE_QUERY([fh-bigquery:reddit_comments],
+         'table_id CONTAINS "2017_" AND length(table_id) >= 5'))
+     GROUP BY subreddit, author HAVING cnt > 10) t2
+     
+ON t1.author=t2.author
+WHERE t1.subreddit!=t2.subreddit
+GROUP BY t1.subreddit, t2.subreddit
+
+## In settings specify table, allow large results and flatten results to be able to save data
